@@ -11,6 +11,8 @@ const entries   = require('./routes/entries');
 const validate = require('./middleware/validate');
 const register = require('./routes/register');
 const session = require('express-session');
+const login = require('./routes/login');
+const user = require('./middleware/user');
 
 var app = express();
 
@@ -28,6 +30,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+app.use(user);
 app.use(messages);
 
 app.get('/', entries.list);
@@ -39,6 +42,9 @@ app.post('/post',
   entries.submit);
 app.get('/register', register.form);
 app.post('/register', register.submit);
+app.get('/login', login.form);
+app.post('/login', login.submit);
+app.get('/logout', login.logout);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
