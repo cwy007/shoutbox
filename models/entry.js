@@ -30,6 +30,10 @@ class Entry {
       cb(null, entries);
     });
   }
+
+  static count(cb) {
+    db.llen('entries', cb);
+  }
 }
 
 module.exports = Entry;

@@ -13,6 +13,9 @@ const register = require('./routes/register');
 const session = require('express-session');
 const login = require('./routes/login');
 const user = require('./middleware/user');
+const api = require('./routes/api');
+const Entry = require('./models/entry');
+const page = require('./middleware/page');
 
 var app = express();
 
@@ -30,8 +33,17 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+
+app.use('/api', api.auth);
+app.get('/api/user/:id', api.user);
+// app.get('/api/entries/:page?', api.entries);
+// app.post('/api/entry', api.add);
+app.post('/api/entry', entries.submit);
+app.get('/api/entries/:page?', page(Entry.count), api.entries);
+
 app.use(user);
 app.use(messages);
+// app.use('/users', users);
 
 app.get('/', entries.list);
 app.use('/users', usersRouter);
